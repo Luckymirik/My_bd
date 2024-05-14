@@ -22,20 +22,31 @@ public class Cats {
             System.out.println(e.getMessage());
         }
     }
-    private void insert(){
+    private void insert() {
         try {
             Scanner sc = new Scanner(System.in);
             System.out.println("Enter type cat: ");
             String type = sc.nextLine();
 
-            String query = "INSERT INTO types (type) " +
+            // Проверка наличия записи
+            String checkQuery = "SELECT * FROM types WHERE type = '" + type + "'";
+            Statement checkStatement = connection.createStatement();
+            ResultSet resultSet = checkStatement.executeQuery(checkQuery);
+            if (resultSet.next()) {
+                System.out.println("Запись уже существует");
+                return; // Прерываем метод, чтобы не добавлять дубликат
+            }
+
+            // Вставка записи
+            String insertQuery = "INSERT INTO types (type) " +
                     "VALUES('" + type + "')";
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(query);
+            Statement insertStatement = connection.createStatement();
+            insertStatement.executeUpdate(insertQuery);
 
             System.out.println("Rows added");
-            statement.close();
-        }catch (Exception e){
+            insertStatement.close();
+            checkStatement.close();
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
