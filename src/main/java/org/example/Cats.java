@@ -7,8 +7,10 @@ public class Cats {
     public static void main(String[] args) {
         Cats cats = new Cats();
         cats.open();
-        cats.insertAllTypes();
+//        cats.insertAllTypes();
 //        cats.insert();
+        cats.deleteType();
+        cats.updateType();
         cats.select();
         cats.close();
 
@@ -97,6 +99,42 @@ public class Cats {
             }
             System.out.println("Все типы успешно добавлены");
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    private void deleteType(){
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Delete type cat: ");
+            int id = sc.nextInt();
+
+            String deleteSQL = "DELETE FROM types WHERE id = " + id;
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(deleteSQL);
+            System.out.println("Удаление успешно");
+            statement.close();
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+
+        }
+    }
+    private void updateType(){
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Update type cat: ");
+
+            String type = sc.nextLine();
+            System.out.println("id: ");
+            int id = sc.nextInt();
+
+            String updateSql = "UPDATE types SET type = '" + type +"' WHERE id = " + id;
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(updateSql);
+            System.out.println("Редактирование успешно");
+            statement.close();
+        }
+        catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
