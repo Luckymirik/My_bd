@@ -128,9 +128,11 @@ public class Cats {
             System.out.println("id: ");
             int id = sc.nextInt();
 
-            String updateSql = "UPDATE types SET type = '" + type +"' WHERE id = " + id;
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(updateSql);
+            String updateSql = "UPDATE types SET type = ?  WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(updateSql);
+            statement.setString(1,type);
+            statement.setInt(2,id);
+            statement.executeUpdate();
             System.out.println("Редактирование успешно");
             statement.close();
         }
