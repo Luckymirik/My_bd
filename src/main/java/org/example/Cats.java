@@ -19,7 +19,7 @@ public class Cats {
     Connection connection;
     private void open(){
         try{
-            Class.forName("org.sqlite.JDBC");
+//            Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\user\\IdeaProjects\\MyBd1\\identifier.sqlite");
             System.out.println("Connected");
         }catch (Exception e){
@@ -138,6 +138,22 @@ public class Cats {
         }
         catch (Exception e){
             System.out.println(e.getMessage());
+        }
+    }
+    private void getType(){
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Введите id кошки: ");
+
+            int id = sc.nextInt();
+
+            String selectSQL;
+
+            PreparedStatement statement = connection.prepareStatement(selectSQL);
+            statement.setInt(1,id);
+            statement.executeQuery(selectSQL);
+
+
         }
     }
     private void insert() {
