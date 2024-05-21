@@ -7,11 +7,13 @@ public class Cats {
     public static void main(String[] args) {
         Cats cats = new Cats();
         cats.open();
+        cats.secondTable();
 //        cats.insertAllTypes();
 //        cats.insert();
-        cats.deleteType();
-        cats.updateType();
-        cats.select();
+//        cats.deleteType();
+//        cats.updateType();
+//        cats.select();
+//        cats.getType();
         cats.close();
 
     }
@@ -25,6 +27,25 @@ public class Cats {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+    }
+    private void secondTable(){
+        try {
+            String secondTable = "CREATE TABLE cats (" +
+                    " id INT PRIMARY KEY UNIQUE, " +
+                    "name VARCHAR(20) NOT NULL, " +
+                    "type_id INT NOT NULL, age INT NOT NULL, " +
+                    "weight DOUBLE, FOREIGN KEY (type_id) " +
+                    "REFERENCES types(id)" +
+                    ")";
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(secondTable);
+            System.out.println("Таблица создана");
+            statement.close();
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+
     }
     private void insertAllTypes() {
         String[] typesToInsert = {
@@ -140,22 +161,27 @@ public class Cats {
             System.out.println(e.getMessage());
         }
     }
-    private void getType(){
-        try {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Введите id кошки: ");
-
-            int id = sc.nextInt();
-
-            String selectSQL;
-
-            PreparedStatement statement = connection.prepareStatement(selectSQL);
-            statement.setInt(1,id);
-            statement.executeQuery(selectSQL);
-
-
-        }
-    }
+//    private void getType(){
+//        try {
+//            Scanner sc = new Scanner(System.in);
+//            System.out.println("Введите id кошки: ");
+//
+//            int id = sc.nextInt();
+//          Statement statement = connection.createStatement();
+//
+//
+//            String selectSQL = "SELECT type FROM types WHERE id = (?)";
+//            System.out.println(statement.);
+//
+//
+//
+//
+//            statement.close();
+//        }
+//        catch (Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
     private void insert() {
         try {
             Scanner sc = new Scanner(System.in);
