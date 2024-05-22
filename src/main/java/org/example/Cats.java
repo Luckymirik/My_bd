@@ -44,8 +44,31 @@ public class Cats {
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
-
-
+    }
+    private void createCat(){
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Введите имя кошки: ");
+            String name = sc.nextLine();
+            System.out.println("Введите тип кошки");
+            String type = sc.nextLine();
+            System.out.println("Введите возраст кошки");
+            int age = sc.nextInt();
+            System.out.println("Введите вес кошки");
+            double weight = sc.nextDouble();
+            System.out.println("Кошка добавлена");
+            String insertCat = "INSERT into types (type)" +
+                    "SELECT '" +type+
+                    "' WHERE NOT EXISTS (SELECT * FROM types WHERE type ='"+type+"')"+
+                    "INSERT INTO cats("")"
+                    ;
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(insertCat);
+            System.out.println("Кошка добавлена");
+            statement.close();
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
     private void insertAllTypes() {
         String[] typesToInsert = {
