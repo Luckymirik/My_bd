@@ -1,7 +1,9 @@
 package org.example;
 
 import java.sql.*;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Cats {
     public static void main(String[] args) {
@@ -45,30 +47,55 @@ public class Cats {
             System.out.println(e.getMessage());
         }
     }
-    private void createCat(){
+//    private void createCat(){
+//        try {
+//            Scanner sc = new Scanner(System.in);
+//            System.out.println("Введите имя кошки: ");
+//            String name = sc.nextLine();
+//            System.out.println("Введите тип кошки");
+//            String type = sc.nextLine();
+//            System.out.println("Введите возраст кошки");
+//            int age = sc.nextInt();
+//            System.out.println("Введите вес кошки");
+//            double weight = sc.nextDouble();
+//            System.out.println("Кошка добавлена");
+//            String insertCat = "INSERT into types (type)" +
+//                    "SELECT '" +type+
+//                    "' WHERE NOT EXISTS (SELECT * FROM types WHERE type ='"+type+"')"+
+//                    "INSERT INTO cats("")"
+//                    ;
+//            Statement statement = connection.createStatement();
+//            statement.executeUpdate(insertCat);
+//            System.out.println("Кошка добавлена");
+//            statement.close();
+//        } catch (SQLException e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
+    private void createMoreCats(int n){
+        String[] names = {"Гарфилд","Том","Гудвин","Рокки",
+                "Ленивец","Пушок","Спорти","Бегемот","Пират","Гудини","Зорро",
+                "Саймон","Альбус","Базилио","Леопольд","Нарцисс","Атос","Каспер","Валлито",
+                "Оксфорд","Бисквит","Соня","Клеопатра","Цунами","Забияка","Матильда","Кнопка",
+                "Масяня","Царапка","Серсея","Ворсинка","Амели","Наоми","Маркиза","Изольда","Вальс",
+                "Несквик","Златан","Баскет","Изюм","Цукат","Мокко","Месси","Кокос","Адидас","Бейлиз",
+                "Тайгер","Зефир","Мохи","Валенсия","Баунти","Свити","Текила","Ириска","Карамель","Виски",
+                "Кукуруза","Гренка","Фасолька","Льдинка","Китана","Офелия","Дайкири","Брусника","Аватар",
+                "Космос","Призрак","Изумруд","Плинтус","Яндекс","Крисмас","Метеор","Оптимус","Смайлик",
+                "Цельсий","Краска","Дейзи","Пенка","Веста","Астра","Эйприл","Среда","Бусинка","Гайка",
+                "Елка","Золушка","Мята","Радость","Сиам","Оскар","Феликс","Гарри","Байрон","Чарли","Симба",
+                "Тао","Абу","Ватсон","Енисей","Измир","Кайзер","Васаби","Байкал","Багира","Айрис","Диана",
+                "Мими","Сакура", "Индия","Тиффани","Скарлетт","Пикси",
+                "Лиззи","Алиса","Лило","Ямайка","Пэрис","Мальта","Аляска"};
+        Random random = new Random();
+        String randomName = names[random.nextInt(names.length)];
+        int randomId = ThreadLocalRandom.current().nextInt(3,62);
+        int randomAge = ThreadLocalRandom.current().nextInt(1,16);
         try {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Введите имя кошки: ");
-            String name = sc.nextLine();
-            System.out.println("Введите тип кошки");
-            String type = sc.nextLine();
-            System.out.println("Введите возраст кошки");
-            int age = sc.nextInt();
-            System.out.println("Введите вес кошки");
-            double weight = sc.nextDouble();
-            System.out.println("Кошка добавлена");
-            String insertCat = "INSERT into types (type)" +
-                    "SELECT '" +type+
-                    "' WHERE NOT EXISTS (SELECT * FROM types WHERE type ='"+type+"')"+
-                    "INSERT INTO cats("")"
-                    ;
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(insertCat);
-            System.out.println("Кошка добавлена");
-            statement.close();
-        } catch (SQLException e){
-            System.out.println(e.getMessage());
+
+            ResultSet resultSet =
         }
+
     }
     private void insertAllTypes() {
         String[] typesToInsert = {
