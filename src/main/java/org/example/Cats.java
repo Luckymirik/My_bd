@@ -72,6 +72,7 @@ public class Cats {
 //            System.out.println(e.getMessage());
 //        }
 //    }
+
     private void createMoreCats(int n){
         String[] names = {"Гарфилд","Том","Гудвин","Рокки",
                 "Ленивец","Пушок","Спорти","Бегемот","Пират","Гудини","Зорро",
