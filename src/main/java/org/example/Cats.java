@@ -191,6 +191,38 @@ public class Cats {
 
         }
     }
+    private void deleteCatById(){
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Delete cat by id: ");
+            int id = sc.nextInt();
+
+            String deleteSQL = "DELETE FROM cats WHERE id = " + id;
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(deleteSQL);
+            System.out.println("Удаление прошло успешно");
+            statement.close();
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+    }
+    private void deleteCatByName(){
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Delete cat by name: ");
+            String name = sc.nextLine();
+
+            String deleteSql = "DELETE FROM cats WHERE name = " + name;
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(deleteSql);
+            System.out.println("Удаление прошло успешно");
+            statement.close();
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
     private void updateType(){
         try {
             Scanner sc = new Scanner(System.in);
@@ -211,6 +243,26 @@ public class Cats {
         catch (Exception e){
             System.out.println(e.getMessage());
         }
+    }
+    private void updateCat(){
+        try {
+            Scanner sc = new Scanner(System.in);
+
+            System.out.println("Name : ");
+            String name = sc.nextLine();
+            System.out.println("Update cat id: ");
+
+            int id = sc.nextInt();
+
+
+            String updateSQL = "UPDATE cats SET name = ? WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(updateSQL);
+            statement.setInt(1,id);
+            statement.setString(2,name);
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+
     }
 //    private void getType(){
 //        try {
