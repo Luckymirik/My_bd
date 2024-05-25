@@ -9,7 +9,11 @@ public class Cats {
     public static void main(String[] args) {
         Cats cats = new Cats();
         cats.open();
-        cats.secondTable();
+//        cats.secondTable();
+        //cats.createMoreCats(5000);
+   //     cats.getCatById();
+      //  cats.getCatWhere();
+        cats.getAllCats();
 //        cats.insertAllTypes();
 //        cats.insert();
 //        cats.deleteType();
@@ -19,6 +23,69 @@ public class Cats {
         cats.close();
 
     }
+    String[] typesToInsert = {
+            "Абиссинская кошка",
+            "Австралийский мист",
+            "Американская жесткошерстная",
+            "Американская короткошерстная",
+            "Американский бобтейл",
+            "Американский кёрл",
+            "Балинезийская кошка",
+            "Бенгальская кошка",
+            "Бирманская кошка",
+            "Бомбейская кошка",
+            "Бразильская короткошерстная",
+            "Британская длинношерстная",
+            "Британская короткошерстная",
+            "Бурманская кошка",
+            "Бурмилла кошка",
+            "Гавана",
+            "Гималайская кошка",
+            "Девон-рекс",
+            "Донский сфинкс",
+            "Европейская короткошерстная",
+            "Египетская мау",
+            "Канадский сфинкс",
+            "Кимрик",
+            "Корат",
+            "Корниш рекс",
+            "Курильский бобтейл",
+            "Лаперм",
+            "Манчкин",
+            "Мейн-кун",
+            "Мекогонский бобтейл",
+            "Мэнкс кошка",
+            "Наполеон",
+            "Немецкий рекс",
+            "Нибелунг",
+            "Норвежская лесная кошка",
+            "Ориентальная кошка",
+            "Оцикет",
+            "Персидская кошка",
+            "Петерболд",
+            "Пиксибоб",
+            "Рагамаффин",
+            "Русская голубая кошка",
+            "Рэгдолл",
+            "Саванна",
+            "Селкирк-рекс",
+            "Сиамская кошка",
+            "Сибирская кошка",
+            "Сингапурская кошка",
+            "Скоттиш-фолд",
+            "Сноу-шу",
+            "Сомалийская кошка",
+            "Тайская кошка",
+            "Тойгер",
+            "Тонкинская кошка",
+            "Турецкая ангорская кошка",
+            "Турецкий ван",
+            "Украинский левкой",
+            "Чаузи",
+            "Шартрез",
+            "Экзотическая короткошерстная",
+            "Японский бобтейл"
+    };
 
     Connection connection;
     private void open(){
@@ -30,15 +97,14 @@ public class Cats {
             System.out.println(e.getMessage());
         }
     }
+
     private void secondTable(){
         try {
-            String secondTable = "CREATE TABLE cats (" +
-                    " id INT PRIMARY KEY UNIQUE, " +
+            String secondTable = "CREATE TABLE if not exists cats (" +
+                    " id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " +
                     "name VARCHAR(20) NOT NULL, " +
-                    "type_id INT NOT NULL, age INT NOT NULL, " +
-                    "weight DOUBLE, FOREIGN KEY (type_id) " +
-                    "REFERENCES types(id)" +
-                    ")";
+                    "type_id INT NOT NULL REFERENCES types(id), age INT NOT NULL, " +
+                    "weight DOUBLE )";
             Statement statement = connection.createStatement();
             statement.executeUpdate(secondTable);
             System.out.println("Таблица создана");
@@ -47,31 +113,95 @@ public class Cats {
             System.out.println(e.getMessage());
         }
     }
-//    private void createCat(){
-//        try {
-//            Scanner sc = new Scanner(System.in);
-//            System.out.println("Введите имя кошки: ");
-//            String name = sc.nextLine();
-//            System.out.println("Введите тип кошки");
-//            String type = sc.nextLine();
-//            System.out.println("Введите возраст кошки");
-//            int age = sc.nextInt();
-//            System.out.println("Введите вес кошки");
-//            double weight = sc.nextDouble();
-//            System.out.println("Кошка добавлена");
-//            String insertCat = "INSERT into types (type)" +
-//                    "SELECT '" +type+
-//                    "' WHERE NOT EXISTS (SELECT * FROM types WHERE type ='"+type+"')"+
-//                    "INSERT INTO cats("")"
-//                    ;
-//            Statement statement = connection.createStatement();
-//            statement.executeUpdate(insertCat);
-//            System.out.println("Кошка добавлена");
-//            statement.close();
-//        } catch (SQLException e){
-//            System.out.println(e.getMessage());
-//        }
-//    }
+    private void createCat(String name,String type,int age,Double weight){
+        try {
+            ResultSet resultSet = getType("type = '" + type + "'");
+            int id;
+            if (resultSet.isBeforeFirst()){
+                id = resultSet.getInt("id");
+            }else {
+                insert(type);
+                id = getType("type = '" + type + "'").getInt("id");
+            }
+            String insertCat = "INSERT into 'cats' ('name','type_id','age','weight') VALUES ('" + name + "'," + id + "," + age + "," + weight + ")"  ;
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(insertCat);
+            System.out.println("Кошка добавлена");
+            statement.close();
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    private ResultSet getType(String type) throws SQLException{
+        Statement statement = connection.createStatement();
+        String query = "Select id, type FROM types WHERE " + type;
+        return statement.executeQuery(query);
+    }
+    private void getCatById(){
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Введите id кота: ");
+            int id = sc.nextInt();
+            String query = "SELECT * FROM cats WHERE id = " + id;
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()){
+                int ident = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                int age = resultSet.getInt("age");
+                double weight = resultSet.getDouble("weight");
+                System.out.println(id + "\t|" + name + "\t|"
+                 + age + "\t|" + weight);
+            }
+            resultSet.close();
+            statement.close();
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    private void getCatWhere(){
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Введите условие: ");
+            String where = sc.nextLine();
+            String query = "SELECT * FROM cats WHERE " + where;
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()){
+                int ident = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                int age = resultSet.getInt("age");
+                double weight = resultSet.getDouble("weight");
+                System.out.println(ident + "\t|" + name + "\t|"
+                        + age + "\t|" + weight);
+            }
+            resultSet.close();
+            statement.close();
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    private void getAllCats(){
+        try {
+            String query = "SELECT * FROM cats";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()){
+                int ident = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                int age = resultSet.getInt("age");
+                double weight = resultSet.getDouble("weight");
+                System.out.println(ident + "\t|" + name + "\t|"
+                        + age + "\t|" + weight);
+            }
+            resultSet.close();
+            statement.close();
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
 
     private void createMoreCats(int n){
         String[] names = {"Гарфилд","Том","Гудвин","Рокки",
@@ -88,80 +218,24 @@ public class Cats {
                 "Тао","Абу","Ватсон","Енисей","Измир","Кайзер","Васаби","Байкал","Багира","Айрис","Диана",
                 "Мими","Сакура", "Индия","Тиффани","Скарлетт","Пикси",
                 "Лиззи","Алиса","Лило","Ямайка","Пэрис","Мальта","Аляска"};
-        Random random = new Random();
-        String randomName = names[random.nextInt(names.length)];
-        int randomId = ThreadLocalRandom.current().nextInt(3,62);
-        int randomAge = ThreadLocalRandom.current().nextInt(1,16);
         try {
+            for (int i = 0; i < n; i++) {
+                createCat(names[(int) ((names.length - 1) * Math.random())]
+                        ,typesToInsert[(int) ((typesToInsert.length - 1) * Math.random())]
+                        , (int) (25 * Math.random())
+                        ,17 * Math.random());
 
-            ResultSet resultSet =
+            }
+            System.out.println("Количество добавленных котов: " + n);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
 
     }
+
+
     private void insertAllTypes() {
-        String[] typesToInsert = {
-                "Абиссинская кошка",
-                "Австралийский мист",
-                "Американская жесткошерстная",
-                "Американская короткошерстная",
-                "Американский бобтейл",
-                "Американский кёрл",
-                "Балинезийская кошка",
-                "Бенгальская кошка",
-                "Бирманская кошка",
-                "Бомбейская кошка",
-                "Бразильская короткошерстная",
-                "Британская длинношерстная",
-                "Британская короткошерстная",
-                "Бурманская кошка",
-                "Бурмилла кошка",
-                "Гавана",
-                "Гималайская кошка",
-                "Девон-рекс",
-                "Донский сфинкс",
-                "Европейская короткошерстная",
-                "Египетская мау",
-                "Канадский сфинкс",
-                "Кимрик",
-                "Корат",
-                "Корниш рекс",
-                "Курильский бобтейл",
-                "Лаперм",
-                "Манчкин",
-                "Мейн-кун",
-                "Мекогонский бобтейл",
-                "Мэнкс кошка",
-                "Наполеон",
-                "Немецкий рекс",
-                "Нибелунг",
-                "Норвежская лесная кошка",
-                "Ориентальная кошка",
-                "Оцикет",
-                "Персидская кошка",
-                "Петерболд",
-                "Пиксибоб",
-                "Рагамаффин",
-                "Русская голубая кошка",
-                "Рэгдолл",
-                "Саванна",
-                "Селкирк-рекс",
-                "Сиамская кошка",
-                "Сибирская кошка",
-                "Сингапурская кошка",
-                "Скоттиш-фолд",
-                "Сноу-шу",
-                "Сомалийская кошка",
-                "Тайская кошка",
-                "Тойгер",
-                "Тонкинская кошка",
-                "Турецкая ангорская кошка",
-                "Турецкий ван",
-                "Украинский левкой",
-                "Чаузи",
-                "Шартрез",
-                "Экзотическая короткошерстная",
-                "Японский бобтейл"
-        };
+
         String insertSQL = "INSERT INTO types (type) VALUES (?)";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
@@ -285,11 +359,10 @@ public class Cats {
 //            System.out.println(e.getMessage());
 //        }
 //    }
-    private void insert() {
+    private void insert(String type) {
         try {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Enter type cat: ");
-            String type = sc.nextLine();
+
+
 
             // Проверка наличия записи
             String checkQuery = "SELECT * FROM types WHERE type = '" + type + "'";
@@ -329,6 +402,7 @@ public class Cats {
             System.out.println(e.getMessage());
         }
     }
+
     private void close(){
         try {
             connection.close();
